@@ -35,10 +35,7 @@
                 <li class="nav-item navbar-dropdown dropdown-user dropdown">
                     <a class="nav-link dropdown-toggle hide-arrow p-0" href="#" data-bs-toggle="dropdown">
                         <div class="avatar avatar-online">
-                            @php
-                                $profilePic = Auth::user()->detail?->foto_profile;
-                            @endphp
-                            <img src="{{ $profilePic ? asset('storage/' . $profilePic) : asset('assets/img/avatars/1.png') }}"
+                            <img src="{{ Auth::user()->profile_url ?? asset('assets/img/avatars/1.png') }}"
                                 alt="User Avatar" class="w-px-40 h-auto rounded-circle" />
                         </div>
                     </a>
@@ -48,13 +45,13 @@
                                 <div class="d-flex">
                                     <div class="flex-shrink-0 me-3">
                                         <div class="avatar avatar-online">
-                                            <img src="{{ $profilePic ? asset('storage/' . $profilePic) : asset('assets/img/avatars/1.png') }}"
+                                            <img src="{{ Auth::user()->profile_url ?? asset('assets/img/avatars/1.png') }}"
                                                 alt="User Avatar" class="w-px-40 h-auto rounded-circle" />
                                         </div>
                                     </div>
                                     <div class="flex-grow-1">
                                         <h6 class="mb-0">{{ Auth::user()->name }}</h6>
-                                        <small class="text-muted text-capitalize">User</small>
+                                        <small class="text-muted">{{ ucwords(str_replace(['_','-'], ' ', Auth::user()->role ?? 'User')) }}</small>
                                     </div>
                                 </div>
                             </a>

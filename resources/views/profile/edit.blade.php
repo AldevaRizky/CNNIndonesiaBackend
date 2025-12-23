@@ -144,7 +144,7 @@
                     </div>
                     <div class="col-md-3 mb-3">
                         <label class="form-label">Role</label>
-                        <input type="text" name="role" class="form-control" value="{{ old('role', $user->role) }}" />
+                        <input type="text" class="form-control" value="{{ $user->role ?? '-' }}" disabled />
                     </div>
 
                     <div class="col-12 mb-3">
