@@ -104,13 +104,22 @@ class ProfileController extends Controller
 
         $user = $request->user();
 
-        Auth::logout();
+        try {
+            // Delete profile photo from public storage if present
+            if ($user->profile_photo_path) {
+                Storage::disk('public')->delete($user->profile_photo_path);
+            }
 
-        $user->delete();
+            Auth::logout();
 
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
+            $user->delete();
 
-        return Redirect::to('/')->with('success', 'Akun Anda telah dihapus.');
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+
+            return Redirect::to('/')->with('success', 'Akun Anda telah dihapus.');
+        } catch (\Exception $e) {
+            return Redirect::back()->withErrors(['error' => 'Gagal menghapus akun: ' . $e->getMessage()])->withInput();
+        }
     }
 }
