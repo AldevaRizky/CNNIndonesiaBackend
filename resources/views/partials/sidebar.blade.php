@@ -3,14 +3,12 @@
         [
             'type' => 'menu',
             'name' => 'Dashboard',
-            'url' => route('admin.dashboard'),
+            'url' => route('dashboard'),
             'icon' => 'bx bx-home',
-            'roles' => ['admin'],
         ],
         [
             'type' => 'header',
             'name' => 'Apps & Pages',
-            'roles' => ['admin'],
         ],
         // [
         //     'type' => 'menu',
@@ -69,42 +67,38 @@
 
     <ul class="menu-inner py-1">
         @foreach ($menus as $menu)
-            @if (in_array(auth()->user()->role, $menu['roles']))
-                @if ($menu['type'] === 'header')
-                    <li class="menu-header small text-uppercase">
-                        <span class="menu-header-text">{{ $menu['name'] }}</span>
-                    </li>
-                @elseif ($menu['type'] === 'menu')
-                    @php
-                        $isSubmenuActive =
-                            isset($menu['submenu']) &&
-                            collect($menu['submenu'])->contains(fn($submenu) => request()->url() === $submenu['url']);
-                    @endphp
+            @if ($menu['type'] === 'header')
+                <li class="menu-header small text-uppercase">
+                    <span class="menu-header-text">{{ $menu['name'] }}</span>
+                </li>
+            @elseif ($menu['type'] === 'menu')
+                @php
+                    $isSubmenuActive =
+                        isset($menu['submenu']) &&
+                        collect($menu['submenu'])->contains(fn($submenu) => request()->url() === $submenu['url']);
+                @endphp
 
-                    <li
-                        class="menu-item {{ request()->url() === $menu['url'] || $isSubmenuActive ? 'active open' : '' }}">
-                        <a href="{{ $menu['url'] }}"
-                            class="menu-link {{ isset($menu['submenu']) ? 'menu-toggle' : '' }}">
-                            <i class="menu-icon tf-icons {{ $menu['icon'] }}"></i>
-                            <div class="text-truncate">{{ $menu['name'] }}</div>
-                            @isset($menu['submenu'])
-                                <span class="badge rounded-pill bg-danger ms-auto">{{ count($menu['submenu']) }}</span>
-                            @endisset
-                        </a>
-
+                <li class="menu-item {{ request()->url() === $menu['url'] || $isSubmenuActive ? 'active open' : '' }}">
+                    <a href="{{ $menu['url'] }}" class="menu-link {{ isset($menu['submenu']) ? 'menu-toggle' : '' }}">
+                        <i class="menu-icon tf-icons {{ $menu['icon'] ?? '' }}"></i>
+                        <div class="text-truncate">{{ $menu['name'] }}</div>
                         @isset($menu['submenu'])
-                            <ul class="menu-sub">
-                                @foreach ($menu['submenu'] as $submenu)
-                                    <li class="menu-item {{ request()->url() === $submenu['url'] ? 'active' : '' }}">
-                                        <a href="{{ $submenu['url'] }}" class="menu-link">
-                                            <div class="text-truncate">{{ $submenu['name'] }}</div>
-                                        </a>
-                                    </li>
-                                @endforeach
-                            </ul>
+                            <span class="badge rounded-pill bg-danger ms-auto">{{ count($menu['submenu']) }}</span>
                         @endisset
-                    </li>
-                @endif
+                    </a>
+
+                    @isset($menu['submenu'])
+                        <ul class="menu-sub">
+                            @foreach ($menu['submenu'] as $submenu)
+                                <li class="menu-item {{ request()->url() === $submenu['url'] ? 'active' : '' }}">
+                                    <a href="{{ $submenu['url'] }}" class="menu-link">
+                                        <div class="text-truncate">{{ $submenu['name'] }}</div>
+                                    </a>
+                                </li>
+                            @endforeach
+                        </ul>
+                    @endisset
+                </li>
             @endif
         @endforeach
     </ul>

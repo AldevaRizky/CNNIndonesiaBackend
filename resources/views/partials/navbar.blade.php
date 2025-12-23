@@ -44,7 +44,7 @@
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end">
                         <li>
-                            <a class="dropdown-item" href="{{ route('profile.index') }}">
+                            <a class="dropdown-item" href="{{ route('profile.edit') }}">
                                 <div class="d-flex">
                                     <div class="flex-shrink-0 me-3">
                                         <div class="avatar avatar-online">
@@ -54,7 +54,7 @@
                                     </div>
                                     <div class="flex-grow-1">
                                         <h6 class="mb-0">{{ Auth::user()->name }}</h6>
-                                        <small class="text-muted text-capitalize">{{ Auth::user()->role }}</small>
+                                        <small class="text-muted text-capitalize">User</small>
                                     </div>
                                 </div>
                             </a>
@@ -63,7 +63,7 @@
                             <div class="dropdown-divider my-1"></div>
                         </li>
                         <li>
-                            <a class="dropdown-item" href="{{ route('profile.index') }}">
+                            <a class="dropdown-item" href="{{ route('profile.edit') }}">
                                 <i class="bx bx-user bx-md me-3"></i><span>My Profile</span>
                             </a>
                         </li>
