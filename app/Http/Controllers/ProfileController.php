@@ -91,9 +91,16 @@ class ProfileController extends Controller
      */
     public function destroy(Request $request): RedirectResponse
     {
-        $request->validateWithBag('userDeletion', [
-            'password' => ['required', 'current_password'],
-        ]);
+        try {
+            $request->validate([
+                'password' => ['required', 'current_password'],
+            ], [
+                'password.required' => 'Kata sandi wajib diisi untuk menghapus akun.',
+                'password.current_password' => 'Kata sandi yang Anda masukkan salah.',
+            ]);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return Redirect::back()->withErrors($e->errors())->withInput();
+        }
 
         $user = $request->user();
 
@@ -104,6 +111,6 @@ class ProfileController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return Redirect::to('/');
+        return Redirect::to('/')->with('success', 'Akun Anda telah dihapus.');
     }
 }

@@ -283,7 +283,7 @@
         });
     });
 
-    // Show SweetAlert for specific server-side password errors only when a password change was submitted
+    // Show SweetAlert for password/validation errors
     @if ($errors->has('current_password') || $errors->has('password'))
         (function(){
             @if ($errors->has('current_password'))
@@ -303,6 +303,15 @@
                 text: msg
             });
         })();
+    @endif
+
+    // Show any general error messages
+    @if ($errors->has('error'))
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: {!! json_encode($errors->first('error')) !!}
+        });
     @endif
 </script>
 @endpush
