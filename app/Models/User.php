@@ -21,6 +21,24 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'profile_photo_path',
+        'jabatan',
+        'phone',
+        'alamat',
+        'bio',
+        'website',
+        'twitter',
+        'facebook',
+        'instagram',
+        'dob',
+        'gender',
+        'country',
+        'city',
+        'state',
+        'zip',
+        'address_line',
+        'role',
+        'is_active',
     ];
 
     /**
@@ -42,4 +60,16 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    /**
+     * Return full URL for profile photo or a default external logo.
+     */
+    public function getProfileUrlAttribute()
+    {
+        if ($this->profile_photo_path) {
+            return asset('storage/' . $this->profile_photo_path);
+        }
+
+        return asset('assets/img/CNN_International_logo.png');
+    }
 }

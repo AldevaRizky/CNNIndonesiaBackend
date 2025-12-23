@@ -7,6 +7,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
 class ProfileController extends Controller
@@ -26,15 +27,50 @@ class ProfileController extends Controller
      */
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
-        $request->user()->fill($request->validated());
+        $user = $request->user();
+        
+        // Custom validation: if password is filled, current_password is required
+        if ($request->filled('password')) {
+            $request->validate([
+                'current_password' => ['required', 'current_password'],
+            ]);
+        }
+        
+        $data = $request->validated();
 
-        if ($request->user()->isDirty('email')) {
-            $request->user()->email_verified_at = null;
+        // Remove current_password field (not a model field)
+        unset($data['current_password']);
+        
+        // Remove empty password from data
+        if (!$request->filled('password')) {
+            unset($data['password']);
         }
 
-        $request->user()->save();
+        // Handle profile photo upload
+        if ($request->hasFile('profile')) {
+            try {
+                $path = $request->file('profile')->store('profiles', 'public');
+                if ($user->profile_photo_path) {
+                    Storage::disk('public')->delete($user->profile_photo_path);
+                }
+                $data['profile_photo_path'] = $path;
+            } catch (\Exception $e) {
+                return Redirect::back()->withErrors(['profile' => 'Gagal mengunggah foto profil: ' . $e->getMessage()]);
+            }
+        }
+        
+        // Remove 'profile' file input from data
+        unset($data['profile']);
 
-        return Redirect::route('profile.edit')->with('status', 'profile-updated');
+        $user->fill($data);
+
+        if ($user->isDirty('email')) {
+            $user->email_verified_at = null;
+        }
+
+        $user->save();
+
+        return Redirect::route('profile.edit')->with('success', 'Profil berhasil diperbarui.');
     }
 
     /**

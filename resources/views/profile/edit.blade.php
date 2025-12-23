@@ -14,6 +14,30 @@
                 <script>Swal.fire('Sukses', "{{ session('success') }}", 'success');</script>
             @endif
 
+            @php
+                // Build an errors array but exclude password/current_password unless a password change was attempted
+                $showPasswordErrors = old('password');
+                $allMessages = [];
+                foreach ($errors->messages() as $key => $msgs) {
+                    if (in_array($key, ['password', 'current_password']) && !$showPasswordErrors) {
+                        continue;
+                    }
+                    foreach ($msgs as $m) $allMessages[] = $m;
+                }
+            @endphp
+
+            @if (!empty($allMessages))
+                <script>
+                    (function(){
+                        var errs = {!! json_encode($allMessages) !!};
+                        var html = '<ul style="text-align:left;margin:0;padding-left:1em">';
+                        errs.forEach(function(e){ html += '<li>'+e+'</li>'; });
+                        html += '</ul>';
+                        Swal.fire({icon:'error', title:'Terjadi kesalahan', html: html});
+                    })();
+                </script>
+            @endif
+
             <form action="{{ route('profile.update') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 @method('PATCH')
@@ -41,6 +65,7 @@
                         <label class="form-label">Email</label>
                         <input type="email" name="email" class="form-control" value="{{ old('email', $user->email) }}" required />
                     </div>
+
                     <div class="col-md-6 mb-3">
                         <label class="form-label">Password (leave blank to keep current)</label>
                         <input type="password" name="password" class="form-control" />
@@ -49,6 +74,7 @@
                         <label class="form-label">Password confirmation</label>
                         <input type="password" name="password_confirmation" class="form-control" />
                     </div>
+
                     <div class="col-md-6 mb-3">
                         <label class="form-label">Jabatan</label>
                         <input type="text" name="jabatan" class="form-control" value="{{ old('jabatan', $user->jabatan) }}" />
@@ -57,9 +83,73 @@
                         <label class="form-label">Phone</label>
                         <input type="text" name="phone" class="form-control" value="{{ old('phone', $user->phone) }}" />
                     </div>
+
                     <div class="col-12 mb-3">
                         <label class="form-label">Address</label>
                         <input type="text" name="alamat" class="form-control" value="{{ old('alamat', $user->alamat) }}" />
+                    </div>
+
+                    <div class="col-12 mb-3">
+                        <label class="form-label">Bio</label>
+                        <textarea name="bio" class="form-control" rows="3">{{ old('bio', $user->bio) }}</textarea>
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">Website</label>
+                        <input type="url" name="website" class="form-control" value="{{ old('website', $user->website) }}" />
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">Twitter (url)</label>
+                        <input type="url" name="twitter" class="form-control" value="{{ old('twitter', $user->twitter) }}" />
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">Instagram (url)</label>
+                        <input type="url" name="instagram" class="form-control" value="{{ old('instagram', $user->instagram) }}" />
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">Facebook (url)</label>
+                        <input type="url" name="facebook" class="form-control" value="{{ old('facebook', $user->facebook) }}" />
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">Date of Birth</label>
+                        <input type="date" name="dob" class="form-control" value="{{ old('dob', optional($user->dob)->format('Y-m-d')) }}" />
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">Gender</label>
+                        <select name="gender" class="form-control">
+                            <option value="">-</option>
+                            <option value="male" {{ old('gender', $user->gender) == 'male' ? 'selected' : '' }}>Male</option>
+                            <option value="female" {{ old('gender', $user->gender) == 'female' ? 'selected' : '' }}>Female</option>
+                            <option value="other" {{ old('gender', $user->gender) == 'other' ? 'selected' : '' }}>Other</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Country</label>
+                        <input type="text" name="country" class="form-control" value="{{ old('country', $user->country) }}" />
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">City</label>
+                        <input type="text" name="city" class="form-control" value="{{ old('city', $user->city) }}" />
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">State</label>
+                        <input type="text" name="state" class="form-control" value="{{ old('state', $user->state) }}" />
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label class="form-label">ZIP</label>
+                        <input type="text" name="zip" class="form-control" value="{{ old('zip', $user->zip) }}" />
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label class="form-label">Role</label>
+                        <input type="text" name="role" class="form-control" value="{{ old('role', $user->role) }}" />
+                    </div>
+
+                    <div class="col-12 mb-3">
+                        <label class="form-label">Address line</label>
+                        <input type="text" name="address_line" class="form-control" value="{{ old('address_line', $user->address_line) }}" />
                     </div>
                 </div>
 
@@ -105,7 +195,7 @@
     // reset avatar preview (does not remove existing on server)
     document.getElementById('resetAvatar')?.addEventListener('click', function(){
         const img = document.getElementById('uploadedAvatar');
-        img.src = '{{ $user->profile_url ?? asset('assets/img/logo/ngawi.png') }}';
+        img.src = '{{ $user->profile_url ?? asset('assets/img/CNN_International_logo.png') }}';
         const input = document.getElementById('upload');
         if (input) input.value = null;
     });
@@ -193,8 +283,8 @@
         });
     });
 
-    // Show SweetAlert for specific server-side password errors
-    @if ($errors->has('current_password') || $errors->has('password'))
+    // Show SweetAlert for specific server-side password errors only when a password change was submitted
+    @if (old('password') && ($errors->has('current_password') || $errors->has('password')))
         (function(){
             @if ($errors->has('current_password'))
                 var title = 'Masukkan kata sandi saat ini';
