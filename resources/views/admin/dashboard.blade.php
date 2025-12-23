@@ -1,1 +1,7 @@
-<h1>ini adalah dashboard admin </h1>
+@extends('layouts.dashboard')
+@section('title', 'Dashboard Admin')
+@section('content')
+
+<h1>Selamat Datang Admin</h1>
+
+@endsection
