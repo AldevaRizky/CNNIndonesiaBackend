@@ -33,7 +33,9 @@
                             <td>{{ $article->category->name ?? '-' }}</td>
                             <td>{{ Str::limit(strip_tags($article->excerpt ?? '-'), 50) }}</td>
                             <td>
-                                @if($article->images->count() > 0)
+                                @if($article->featured_image)
+                                    <img src="{{ asset('storage/' . $article->featured_image) }}" style="width:60px;height:60px;object-fit:cover;border-radius:4px;">
+                                @elseif($article->images->count() > 0)
                                     <img src="{{ asset('storage/' . $article->images->first()->image_path) }}" style="width:60px;height:60px;object-fit:cover;border-radius:4px;">
                                 @else
                                     <span class="text-muted">Tidak ada gambar</span>
@@ -41,6 +43,7 @@
                             </td>
                             <td>{{ $article->created_at->format('d M Y') }}</td>
                             <td>
+                                <a href="{{ route('admin.articles.show', $article->id) }}" class="btn btn-info btn-sm mb-1">Lihat</a>
                                 <a href="{{ route('admin.articles.edit', $article->id) }}" class="btn btn-warning btn-sm mb-1">Edit</a>
                                 <form action="{{ route('admin.articles.destroy', $article->id) }}" method="POST" class="d-inline delete-form">
                                     @csrf

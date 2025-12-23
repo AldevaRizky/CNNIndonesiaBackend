@@ -58,6 +58,29 @@
                         <div id="deletedImagesContainer"></div>
                     </div>
 
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Featured Image (opsional)</label>
+                        @if($article->featured_image)
+                            <div class="mb-2">
+                                <img src="{{ asset('storage/' . $article->featured_image) }}" style="width:200px;height:120px;object-fit:cover;border-radius:6px;">
+                            </div>
+                        @endif
+                        <input type="file" name="featured_image" class="form-control" accept="image/*">
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Status</label>
+                        <select name="status" class="form-select">
+                            <option value="draft" {{ old('status', $article->status)=='draft' ? 'selected' : '' }}>Draft</option>
+                            <option value="published" {{ old('status', $article->status)=='published' ? 'selected' : '' }}>Published</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-12 mb-3">
+                        <label class="form-label">Publish At (opsional)</label>
+                        <input type="datetime-local" name="published_at" class="form-control" value="{{ old('published_at', optional($article->published_at)->format('Y-m-d\TH:i')) }}">
+                    </div>
+
                     <div class="col-md-12 mb-3">
                         <label class="form-label">Upload Gambar Baru (Multiple)</label>
                         <input type="file" name="images[]" id="images" class="form-control" accept="image/*" multiple>

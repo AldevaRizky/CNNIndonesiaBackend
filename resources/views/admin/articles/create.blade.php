@@ -40,6 +40,24 @@
                         <textarea name="content" id="editor" class="form-control">{{ old('content') }}</textarea>
                     </div>
 
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Featured Image (opsional)</label>
+                        <input type="file" name="featured_image" class="form-control" accept="image/*">
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Status</label>
+                        <select name="status" class="form-select">
+                            <option value="draft" {{ old('status')=='draft' ? 'selected' : '' }}>Draft</option>
+                            <option value="published" {{ old('status')=='published' ? 'selected' : '' }}>Published</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-12 mb-3">
+                        <label class="form-label">Publish At (opsional)</label>
+                        <input type="datetime-local" name="published_at" class="form-control" value="{{ old('published_at') }}">
+                    </div>
+
                     <div class="col-md-12 mb-3">
                         <label class="form-label">Upload Gambar (Multiple)</label>
                         <input type="file" name="images[]" id="images" class="form-control" accept="image/*" multiple>
