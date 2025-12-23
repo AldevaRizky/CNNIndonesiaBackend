@@ -39,4 +39,16 @@ class ProfileUpdateRequest extends FormRequest
             'current_password' => ['nullable','current_password'],
         ];
     }
+
+    /**
+     * Get custom validation messages.
+     */
+    public function messages(): array
+    {
+        return [
+            'password.confirmed' => 'Konfirmasi password tidak cocok dengan password baru.',
+            'password.min' => 'Password minimal harus 8 karakter.',
+            'current_password.current_password' => 'Kata sandi saat ini tidak sesuai.',
+        ];
+    }
 }

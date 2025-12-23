@@ -284,16 +284,16 @@
     });
 
     // Show SweetAlert for specific server-side password errors only when a password change was submitted
-    @if (old('password') && ($errors->has('current_password') || $errors->has('password')))
+    @if ($errors->has('current_password') || $errors->has('password'))
         (function(){
             @if ($errors->has('current_password'))
-                var title = 'Masukkan kata sandi saat ini';
+                var title = 'Kata sandi saat ini salah';
                 var msg = {!! json_encode($errors->first('current_password')) !!};
             @elseif ($errors->has('password'))
                 var raw = {!! json_encode($errors->first('password')) !!};
                 var lower = raw.toLowerCase();
                 var isConfirmation = lower.includes('confirmation') || lower.includes('does not match') || lower.includes('tidak cocok') || lower.includes('konfirmasi') || lower.includes('tidak sama');
-                var title = isConfirmation ? 'Konfirmasi password salah' : 'Password tidak valid';
+                var title = isConfirmation ? 'Konfirmasi password tidak cocok' : 'Password tidak valid';
                 var msg = raw;
             @endif
 

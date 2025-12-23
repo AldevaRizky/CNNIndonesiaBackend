@@ -29,10 +29,13 @@ class ProfileController extends Controller
     {
         $user = $request->user();
         
-        // Custom validation: if password is filled, current_password is required
+        // Custom validation: if password is filled, current_password is required and must match
         if ($request->filled('password')) {
             $request->validate([
                 'current_password' => ['required', 'current_password'],
+            ], [
+                'current_password.required' => 'Kata sandi saat ini wajib diisi untuk mengubah password.',
+                'current_password.current_password' => 'Kata sandi saat ini tidak sesuai.',
             ]);
         }
         
@@ -55,7 +58,7 @@ class ProfileController extends Controller
                 }
                 $data['profile_photo_path'] = $path;
             } catch (\Exception $e) {
-                return Redirect::back()->withErrors(['profile' => 'Gagal mengunggah foto profil: ' . $e->getMessage()]);
+                return Redirect::back()->withErrors(['profile' => 'Gagal mengunggah foto profil: ' . $e->getMessage()])->withInput();
             }
         }
         
@@ -68,9 +71,19 @@ class ProfileController extends Controller
             $user->email_verified_at = null;
         }
 
-        $user->save();
-
-        return Redirect::route('profile.edit')->with('success', 'Profil berhasil diperbarui.');
+        try {
+            $user->save();
+            
+            // Determine success message based on what was updated
+            $message = 'Profil berhasil diperbarui.';
+            if ($request->filled('password')) {
+                $message = 'Profil dan password berhasil diperbarui.';
+            }
+            
+            return Redirect::route('profile.edit')->with('success', $message);
+        } catch (\Exception $e) {
+            return Redirect::back()->withErrors(['error' => 'Gagal menyimpan perubahan: ' . $e->getMessage()])->withInput();
+        }
     }
 
     /**
