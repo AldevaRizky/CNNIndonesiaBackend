@@ -10,6 +10,18 @@
             'type' => 'header',
             'name' => 'Apps & Pages',
         ],
+        [
+            'type' => 'menu',
+            'name' => 'Articles',
+            'url' => route('admin.articles.index'),
+            'icon' => 'bx bx-news',
+        ],
+        [
+            'type' => 'menu',
+            'name' => 'Categories',
+            'url' => route('admin.categories.index'),
+            'icon' => 'bx bx-folder',
+        ],
         // [
         //     'type' => 'menu',
         //     'name' => 'Layout',
@@ -54,9 +66,9 @@
     <div class="app-brand demo">
         <a href="#" class="app-brand-link">
             <span class="app-brand-logo demo">
-                <img src="{{ asset('assets/img/logo/123.png') }}" alt="Logo" width="40">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/6/66/CNN_International_logo.svg" alt="Logo" width="40">
             </span>
-            <span class="app-brand-text demo menu-text fw-bold ms-2" style="font-size:24px;">DISPARPORA</span>
+            <span class="app-brand-text demo menu-text fw-bold ms-2" style="font-size:24px;">INDONESIA</span>
         </a>
         <a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto d-block d-xl-none">
             <i class="bx bx-chevron-left bx-sm d-flex align-items-center justify-content-center"></i>

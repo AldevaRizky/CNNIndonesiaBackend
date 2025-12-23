@@ -28,4 +28,11 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+// Admin routes for articles and categories
+Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
+    Route::resource('categories', App\Http\Controllers\Admin\CategoryController::class);
+    Route::resource('articles', App\Http\Controllers\Admin\ArticleController::class);
+    Route::post('articles/upload', [App\Http\Controllers\Admin\ArticleController::class, 'uploadImage'])->name('articles.upload');
+});
+
 require __DIR__.'/auth.php';
