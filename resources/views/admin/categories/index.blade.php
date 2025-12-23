@@ -10,16 +10,7 @@
         </div>
 
         <div class="card-body">
-            @if(session('success'))
-                <div class="alert alert-success">{{ session('success') }}</div>
-            @endif
-
-            <form method="GET" class="mb-3">
-                <div class="input-group">
-                    <input type="text" name="q" class="form-control" placeholder="Cari..." value="{{ request('q') }}">
-                    <button class="btn btn-outline-secondary">Cari</button>
-                </div>
-            </form>
+            {{-- Search handled by navbar; alerts shown by SweetAlert2 --}}
 
             <div class="table-responsive">
                 <table class="table table-striped">
@@ -68,11 +59,49 @@
 
 @push('scripts')
 <script>
-document.querySelectorAll('.btn-delete').forEach(button => {
-    button.addEventListener('click', function(e){
-        e.preventDefault();
-        const form = this.closest('.delete-form');
-        if (confirm('Hapus kategori ini?')) form.submit();
+document.addEventListener('DOMContentLoaded', function(){
+    @if(session('success'))
+        Swal.fire({
+            icon: 'success',
+            title: 'Sukses',
+            text: "{{ session('success') }}",
+        });
+    @endif
+
+    @if ($errors->any())
+        let html = '<ul style="text-align:left;">';
+        @foreach ($errors->all() as $error)
+            html += '<li>{{ $error }}</li>';
+        @endforeach
+        html += '</ul>';
+        Swal.fire({
+            icon: 'error',
+            title: 'Validasi Gagal',
+            html: html,
+        });
+    @endif
+
+    // Delete confirmation using SweetAlert2
+    document.querySelectorAll('.btn-delete').forEach(button => {
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+            const form = this.closest('.delete-form');
+
+            Swal.fire({
+                title: 'Apakah Anda yakin?',
+                text: "Data kategori ini akan dihapus permanen!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Ya, Hapus!',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    form.submit();
+                }
+            });
+        });
     });
 });
 </script>

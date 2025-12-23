@@ -13,8 +13,8 @@
             <div class="nav-item d-flex align-items-center">
                 <i class="bx bx-search bx-md"></i>
                 <form method="GET" action="{{ url()->current() }}" class="d-flex">
-                    <input type="text" class="form-control border-0 shadow-none ps-1 ps-sm-2" name="search"
-                        placeholder="Search..." aria-label="Search..." value="{{ request('search') }}">
+                    <input type="text" class="form-control border-0 shadow-none ps-1 ps-sm-2" name="q"
+                        placeholder="Search..." aria-label="Search..." value="{{ request('q') }}">
                     <button type="submit" hidden></button>
                 </form>
             </div>

@@ -10,9 +10,7 @@
         </div>
 
         <div class="card-body">
-            @if ($errors->any())
-                <div class="alert alert-danger"><ul class="mb-0">@foreach($errors->all() as $e)<li>{{ $e }}</li>@endforeach</ul></div>
-            @endif
+            {{-- Validation errors shown with SweetAlert2 --}}
 
             <form action="{{ route('admin.articles.update', $article->id) }}" method="POST" enctype="multipart/form-data">
                 @csrf
@@ -80,6 +78,16 @@
 <script src="https://cdn.ckeditor.com/4.22.0/full/ckeditor.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function(){
+    // Show validation errors if any
+    @if ($errors->any())
+        let html = '<ul style="text-align:left;">';
+        @foreach($errors->all() as $e)
+            html += '<li>{{ $e }}</li>';
+        @endforeach
+        html += '</ul>';
+        Swal.fire({icon:'error', title:'Validasi Gagal', html: html});
+    @endif
+
     CKEDITOR.config.versionCheck = false;
     CKEDITOR.replace('editor', {
         height: 400,
@@ -93,10 +101,23 @@ document.addEventListener('DOMContentLoaded', function(){
         button.addEventListener('click', function(){
             const imageId = this.getAttribute('data-image-id');
             const imgEl = document.getElementById('existing-image-' + imageId);
-            if (!confirm('Hapus gambar ini?')) return;
-            const input = document.createElement('input'); input.type='hidden'; input.name='delete_images[]'; input.value=imageId;
-            deletedImagesContainer.appendChild(input);
-            imgEl.style.display = 'none';
+            Swal.fire({
+                title: 'Hapus Gambar?',
+                text: "Gambar ini akan dihapus saat Anda menyimpan perubahan.",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Ya, Hapus!',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    const input = document.createElement('input'); input.type='hidden'; input.name='delete_images[]'; input.value=imageId;
+                    deletedImagesContainer.appendChild(input);
+                    imgEl.style.display = 'none';
+                    Swal.fire('Ditandai untuk dihapus!', 'Gambar akan dihapus saat Anda menyimpan perubahan.', 'success');
+                }
+            });
         });
     });
 

@@ -9,9 +9,7 @@
             <a href="{{ route('admin.categories.index') }}" class="btn btn-secondary">Kembali</a>
         </div>
         <div class="card-body">
-            @if ($errors->any())
-                <div class="alert alert-danger"><ul class="mb-0">@foreach($errors->all() as $e)<li>{{ $e }}</li>@endforeach</ul></div>
-            @endif
+            {{-- Validation errors shown with SweetAlert2 --}}
 
             <form action="{{ route('admin.categories.update', $category->id) }}" method="POST">
                 @csrf
@@ -32,5 +30,20 @@
         </div>
     </div>
 </div>
+
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function(){
+    @if ($errors->any())
+        let html = '<ul style="text-align:left;">';
+        @foreach($errors->all() as $e)
+            html += '<li>{{ $e }}</li>';
+        @endforeach
+        html += '</ul>';
+        Swal.fire({icon:'error', title:'Validasi Gagal', html: html});
+    @endif
+});
+</script>
+@endpush
 
 @endsection

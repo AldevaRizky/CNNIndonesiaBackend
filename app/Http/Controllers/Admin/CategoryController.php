@@ -36,7 +36,6 @@ class CategoryController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'is_active' => 'nullable|boolean',
         ]);
 
         $slug = Str::slug($request->name);
@@ -50,7 +49,7 @@ class CategoryController extends Controller
         Category::create([
             'name' => $request->name,
             'slug' => $slug,
-            'is_active' => $request->has('is_active') ? (bool)$request->is_active : true,
+            'is_active' => $request->has('is_active'),
         ]);
 
         return redirect()->route('admin.categories.index')
@@ -69,7 +68,6 @@ class CategoryController extends Controller
 
         $request->validate([
             'name' => 'required|string|max:255',
-            'is_active' => 'nullable|boolean',
         ]);
 
         $slug = $category->slug;
@@ -86,7 +84,7 @@ class CategoryController extends Controller
         $category->update([
             'name' => $request->name,
             'slug' => $slug,
-            'is_active' => $request->has('is_active') ? (bool)$request->is_active : false,
+            'is_active' => $request->has('is_active'),
         ]);
 
         return redirect()->route('admin.categories.index')
