@@ -14,5 +14,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-// API routes: removed default /user route as not required for this project.
-// Add API routes here when needed.
+Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+    return $request->user();
+});
+
+// Load News API routes
+require __DIR__.'/api_news.php';
