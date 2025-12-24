@@ -27,6 +27,20 @@ class AuthenticatedSessionController extends Controller
     {
         $request->authenticate();
 
+        // Log remember flag and remember_token for debugging remember-me issues
+        try {
+            if ($request->boolean('remember')) {
+                \Log::info('Login requested with remember', [
+                    'user_id' => Auth::id(),
+                    'remember_token' => Auth::user() ? Auth::user()->getRememberToken() : null,
+                ]);
+            } else {
+                \Log::info('Login requested without remember', ['user_id' => Auth::id()]);
+            }
+        } catch (\Throwable $e) {
+            \Log::error('Error logging remember info', ['error' => $e->getMessage()]);
+        }
+
         $request->session()->regenerate();
 
         return redirect()->intended(RouteServiceProvider::HOME);
