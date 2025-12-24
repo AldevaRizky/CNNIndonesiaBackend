@@ -5,41 +5,41 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ $article->title }} - CNN News</title>
     <link rel="icon" type="image/x-icon" href="{{ asset('assets/img/favicon/favicon.ico') }}" />
-    
+
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    
+
     <style>
         * { font-family: 'Inter', sans-serif; }
         body { background: #f8f9fa; }
-        
+
         /* Navbar */
         .navbar-brand img { height: 35px; }
         .navbar { background: #cc0000 !important; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
         .navbar .nav-link { color: #fff !important; font-weight: 500; padding: 0.5rem 1rem !important; }
         .navbar .nav-link:hover { color: #ffeb3b !important; }
         .navbar .btn-login { background: #fff; color: #cc0000; border: none; font-weight: 600; padding: 0.5rem 1.5rem; border-radius: 50px; }
-        
+
         /* Article Detail */
         .article-header { background: #fff; padding: 3rem 0; margin-top: 2rem; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.05); }
         .article-header .category-badge { background: #cc0000; color: #fff; padding: 0.5rem 1.5rem; border-radius: 25px; font-size: 0.9rem; font-weight: 600; display: inline-block; margin-bottom: 1rem; }
         .article-header h1 { font-weight: 800; color: #1a1a1a; line-height: 1.3; margin-bottom: 1.5rem; font-size: 2.5rem; }
         .article-meta { display: flex; gap: 2rem; color: #666; margin-bottom: 2rem; flex-wrap: wrap; }
         .article-meta span { display: flex; align-items: center; gap: 0.5rem; }
-        
+
         .featured-image { width: 100%; height: 500px; object-fit: cover; border-radius: 15px; margin-bottom: 2rem; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
-        
+
         .article-content { background: #fff; padding: 3rem; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.05); }
         .article-content p { font-size: 1.1rem; line-height: 1.8; color: #333; margin-bottom: 1.5rem; text-align: justify; }
         .article-content h2, .article-content h3 { font-weight: 700; color: #1a1a1a; margin-top: 2rem; margin-bottom: 1rem; }
         .article-content img { max-width: 100%; height: auto; border-radius: 10px; margin: 2rem 0; }
         .article-content ul, .article-content ol { margin: 1.5rem 0; padding-left: 2rem; }
         .article-content li { margin-bottom: 0.75rem; line-height: 1.8; }
-        
+
         /* Gallery */
         .article-gallery { margin: 3rem 0; }
         .article-gallery h4 { font-weight: 700; margin-bottom: 1.5rem; }
@@ -57,7 +57,7 @@
         .modal-close-simple { background: rgba(255,255,255,0.2); border: none; color: #fff; font-size: 32px; font-weight: 300; line-height: 1; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; transition: all 0.3s; display: flex; align-items: center; justify-content: center; }
         .modal-close-simple:hover { background: rgba(255,255,255,0.3); transform: rotate(90deg); }
         .modal-close-simple:focus { outline: none; box-shadow: none; }
-        
+
         /* Share Buttons */
         .share-section { background: #f8f9fa; padding: 2rem; border-radius: 15px; text-align: center; margin: 3rem 0; }
         .share-section h5 { font-weight: 700; margin-bottom: 1.5rem; }
@@ -66,7 +66,7 @@
         .share-btn.twitter { background: #1da1f2; color: #fff; }
         .share-btn.whatsapp { background: #25d366; color: #fff; }
         .share-btn:hover { transform: translateY(-3px); box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
-        
+
         /* Sidebar */
         .sidebar-card { background: #fff; border-radius: 15px; padding: 2rem; box-shadow: 0 5px 20px rgba(0,0,0,0.05); margin-bottom: 2rem; }
         .sidebar-card h5 { font-weight: 700; margin-bottom: 1.5rem; padding-bottom: 0.75rem; border-bottom: 3px solid #cc0000; }
@@ -76,7 +76,7 @@
         .related-item img { width: 100px; height: 70px; object-fit: cover; border-radius: 8px; }
         .related-item h6 { font-size: 0.95rem; font-weight: 600; margin-bottom: 0.5rem; line-height: 1.4; color: #1a1a1a; }
         .related-item .meta { font-size: 0.8rem; color: #999; }
-        
+
         /* Footer */
         footer { background: #1a1a1a; color: #fff; padding: 3rem 0 1rem; margin-top: 4rem; }
         footer h5 { color: #cc0000; margin-bottom: 1.5rem; font-weight: 700; }
@@ -175,7 +175,7 @@
                             @foreach($article->images as $image)
                             <div class="col-md-4">
                                 <img src="{{ asset('storage/' . $image->image_path) }}" alt="Gallery Image" data-bs-toggle="modal" data-bs-target="#imageModal{{ $loop->index }}">
-                                
+
                                 <!-- Modal -->
                                 <div class="modal fade" id="imageModal{{ $loop->index }}" tabindex="-1" aria-hidden="true">
                                     <div class="modal-dialog modal-fullscreen modal-dialog-centered">
