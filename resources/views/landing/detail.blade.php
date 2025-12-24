@@ -45,6 +45,18 @@
         .article-gallery h4 { font-weight: 700; margin-bottom: 1.5rem; }
         .article-gallery img { width: 100%; height: 250px; object-fit: cover; border-radius: 10px; cursor: pointer; transition: transform 0.3s; }
         .article-gallery img:hover { transform: scale(1.05); }
+
+        /* Modal / full preview: show full image without cropping */
+        .modal.fade .modal-dialog { transition: none; }
+        .modal-backdrop.show { opacity: 0.95; background-color: #000; }
+        .modal-fullscreen { width: 100vw !important; height: 100vh !important; max-width: 100vw !important; margin: 0 !important; padding: 0 !important; }
+        .modal-fullscreen .modal-content { width: 100vw !important; height: 100vh !important; background: rgba(0,0,0,0.95); border: none; border-radius: 0; }
+        .modal-fullscreen .modal-body { width: 100vw !important; height: 100vh !important; padding: 0 !important; display: flex !important; align-items: center !important; justify-content: center !important; overflow: hidden; }
+        .modal-full-image { max-width: 98vw !important; max-height: 98vh !important; width: auto !important; height: auto !important; object-fit: contain !important; display: block !important; }
+        .modal-header-full { position: fixed; top: 20px; right: 20px; z-index: 1060; border: none; padding: 0; background: transparent; }
+        .modal-close-simple { background: rgba(255,255,255,0.2); border: none; color: #fff; font-size: 32px; font-weight: 300; line-height: 1; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; transition: all 0.3s; display: flex; align-items: center; justify-content: center; }
+        .modal-close-simple:hover { background: rgba(255,255,255,0.3); transform: rotate(90deg); }
+        .modal-close-simple:focus { outline: none; box-shadow: none; }
         
         /* Share Buttons */
         .share-section { background: #f8f9fa; padding: 2rem; border-radius: 15px; text-align: center; margin: 3rem 0; }
@@ -165,11 +177,14 @@
                                 <img src="{{ asset('storage/' . $image->image_path) }}" alt="Gallery Image" data-bs-toggle="modal" data-bs-target="#imageModal{{ $loop->index }}">
                                 
                                 <!-- Modal -->
-                                <div class="modal fade" id="imageModal{{ $loop->index }}" tabindex="-1">
-                                    <div class="modal-dialog modal-lg modal-dialog-centered">
-                                        <div class="modal-content">
-                                            <div class="modal-body p-0">
-                                                <img src="{{ asset('storage/' . $image->image_path) }}" class="w-100" alt="Gallery Image">
+                                <div class="modal fade" id="imageModal{{ $loop->index }}" tabindex="-1" aria-hidden="true">
+                                    <div class="modal-dialog modal-fullscreen modal-dialog-centered">
+                                        <div class="modal-content bg-transparent">
+                                            <div class="modal-header modal-header-full">
+                                                <button type="button" class="modal-close-simple" data-bs-dismiss="modal" aria-label="Close">&times;</button>
+                                            </div>
+                                            <div class="modal-body d-flex justify-content-center align-items-center p-0">
+                                                <img src="{{ asset('storage/' . $image->image_path) }}" class="modal-full-image" alt="Gallery Image">
                                             </div>
                                         </div>
                                     </div>
