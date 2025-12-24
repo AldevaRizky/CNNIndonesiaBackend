@@ -210,10 +210,15 @@
                                 <img src="{{ $article->featured_image ? asset('storage/' . $article->featured_image) : 'https://via.placeholder.com/400x220?text=No+Image' }}" alt="{{ $article->title }}">
                                 <div class="card-body">
                                     <span class="category-badge">{{ $article->category->name }}</span>
+                                    @if($article->created_at->diffInHours(now()) < 24)
+                                        <span class="badge bg-success ms-1" style="font-size: 0.7rem;">
+                                            <i class="bi bi-clock-history me-1"></i>TERBARU
+                                        </span>
+                                    @endif
                                     <h5>{{ Str::limit($article->title, 60) }}</h5>
                                     <p class="excerpt">{{ Str::limit(strip_tags($article->excerpt ?: $article->content), 100) }}</p>
                                     <div class="meta">
-                                        <span><i class="bi bi-calendar3 me-1"></i>{{ $article->published_at->format('d M Y') }}</span>
+                                        <span><i class="bi bi-calendar3 me-1"></i>{{ $article->published_at ? $article->published_at->format('d M Y') : $article->created_at->format('d M Y') }}</span>
                                         <span><i class="bi bi-eye me-1"></i>{{ number_format($article->view_count) }}</span>
                                     </div>
                                 </div>
