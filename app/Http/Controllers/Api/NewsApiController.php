@@ -380,12 +380,15 @@ class NewsApiController extends Controller
 
     /**
      * Get all categories
+     * FIXED: Only count published articles
      */
     public function categories()
     {
         try {
             $categories = Category::where('is_active', true)
-                ->withCount('articles')
+                ->withCount(['articles' => function ($query) {
+                    $query->where('status', 'published');
+                }])
                 ->orderBy('name')
                 ->get();
 
@@ -405,6 +408,7 @@ class NewsApiController extends Controller
 
     /**
      * Get home data (all in one for app home screen)
+     * FIXED: Only count published articles in categories
      */
     public function home()
     {
@@ -438,9 +442,11 @@ class NewsApiController extends Controller
                 ->limit(5)
                 ->get();
 
-            // Categories with article count
+            // Categories with published article count only
             $categories = Category::where('is_active', true)
-                ->withCount('articles')
+                ->withCount(['articles' => function ($query) {
+                    $query->where('status', 'published');
+                }])
                 ->orderBy('name')
                 ->get();
 
@@ -470,6 +476,7 @@ class NewsApiController extends Controller
 
     /**
      * Get statistics
+     * FIXED: Only count published articles per category
      */
     public function stats()
     {
@@ -477,10 +484,12 @@ class NewsApiController extends Controller
             $totalArticles = Article::where('status', 'published')->count();
             $totalCategories = Category::where('is_active', true)->count();
             $totalViews = Article::where('status', 'published')->sum('view_count');
-            
-            // Articles per category
+
+            // Articles per category - only published
             $categoriesStats = Category::where('is_active', true)
-                ->withCount('articles')
+                ->withCount(['articles' => function ($query) {
+                    $query->where('status', 'published');
+                }])
                 ->get()
                 ->map(function ($category) {
                     return [
