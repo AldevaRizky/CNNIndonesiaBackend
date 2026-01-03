@@ -15,9 +15,35 @@ class AuthenticatedSessionController extends Controller
     /**
      * Display the login view.
      */
-    public function create(): View
+    public function create(Request $request): View
     {
-        return view('auth.login');
+        // Check if user is locked out
+        $identifier = $this->getIdentifier($request);
+        $lockoutKey = 'login_lockout_' . $identifier;
+        $attemptsKey = 'login_attempts_' . $identifier;
+        
+        $isLocked = false;
+        $remainingMinutes = 0;
+        $attempts = 0;
+        
+        if ($request->cookie($lockoutKey)) {
+            $lockoutTime = (int) $request->cookie($lockoutKey);
+            
+            if (time() < $lockoutTime) {
+                $isLocked = true;
+                $remainingMinutes = ceil(($lockoutTime - time()) / 60);
+            }
+        }
+        
+        if ($request->cookie($attemptsKey)) {
+            $attempts = (int) $request->cookie($attemptsKey);
+        }
+        
+        return view('auth.login', [
+            'isLocked' => $isLocked,
+            'remainingMinutes' => $remainingMinutes,
+            'attempts' => $attempts
+        ]);
     }
 
     /**
@@ -58,5 +84,14 @@ class AuthenticatedSessionController extends Controller
         $request->session()->regenerateToken();
 
         return redirect('/');
+    }
+    
+    /**
+     * Get unique identifier for rate limiting
+     */
+    private function getIdentifier(Request $request): string
+    {
+        $email = $request->input('email', '');
+        return md5($request->ip() . '|' . $email . '|' . $request->userAgent());
     }
 }
