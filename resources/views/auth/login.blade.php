@@ -120,7 +120,7 @@
  <script src="{{ asset('assets/vendor/libs/jquery/jquery.js') }}"></script>
  <script src="{{ asset('assets/vendor/js/bootstrap.js') }}"></script>
  <script src="{{ asset('assets/js/main.js') }}"></script>
- 
+
  <script>
     // Check for lockout on page load
     function getCookie(name) {
@@ -129,20 +129,20 @@
         if (parts.length === 2) return parts.pop().split(';').shift();
         return null;
     }
-    
+
     function getIdentifier() {
         // Create identifier similar to server-side
         const email = document.getElementById('email') ? document.getElementById('email').value : '';
         // We can't perfectly replicate server-side hash, but we can check cookies
         return true;
     }
-    
+
     function checkLockout() {
         // Check all cookies for lockout keys
         const cookies = document.cookie.split(';');
         let isLocked = false;
         let lockoutTime = 0;
-        
+
         for (let cookie of cookies) {
             cookie = cookie.trim();
             if (cookie.startsWith('login_lockout_')) {
@@ -154,24 +154,24 @@
                 }
             }
         }
-        
+
         if (isLocked) {
             disableForm(lockoutTime);
         }
     }
-    
+
     function disableForm(lockoutTime) {
         const form = document.getElementById('formAuthentication');
         const email = document.getElementById('email');
         const password = document.getElementById('password');
         const remember = document.getElementById('remember_me');
         const button = document.getElementById('loginButton');
-        
+
         if (email) email.disabled = true;
         if (password) password.disabled = true;
         if (remember) remember.disabled = true;
         if (button) button.disabled = true;
-        
+
         // Show or update alert
         let alert = document.getElementById('lockoutAlert');
         if (!alert) {
@@ -180,17 +180,17 @@
             alert.className = 'alert alert-danger mb-3';
             form.parentNode.insertBefore(alert, form);
         }
-        
+
         const currentTime = Math.floor(Date.now() / 1000);
         const remainingMinutes = Math.ceil((lockoutTime - currentTime) / 60);
-        
+
         alert.innerHTML = `<strong>Akun Dikunci!</strong><br>Terlalu banyak percobaan login gagal. Silakan coba lagi dalam <strong id="remainingTime">${remainingMinutes}</strong> menit.`;
-        
+
         // Update countdown every minute
         const interval = setInterval(() => {
             const now = Math.floor(Date.now() / 1000);
             const remaining = Math.ceil((lockoutTime - now) / 60);
-            
+
             if (remaining <= 0) {
                 clearInterval(interval);
                 location.reload();
@@ -202,11 +202,11 @@
             }
         }, 60000); // Update every minute
     }
-    
+
     // Check on page load
     document.addEventListener('DOMContentLoaded', function() {
         checkLockout();
-        
+
         // Also check on form submit
         const form = document.getElementById('formAuthentication');
         if (form) {
@@ -227,7 +227,7 @@
             });
         }
     });
-    
+
     // Re-check periodically
     setInterval(checkLockout, 5000); // Check every 5 seconds
  </script>

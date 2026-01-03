@@ -19,14 +19,14 @@ class CheckLoginAttempts
         $identifier = $this->getIdentifier($request);
         $lockoutKey = 'login_lockout_' . $identifier;
         $attemptsKey = 'login_attempts_' . $identifier;
-        
+
         // Check if user is locked out
         if ($request->cookie($lockoutKey)) {
             $lockoutTime = (int) $request->cookie($lockoutKey);
-            
+
             if (time() < $lockoutTime) {
                 $remainingMinutes = ceil(($lockoutTime - time()) / 60);
-                
+
                 return response()->json([
                     'success' => false,
                     'message' => "Terlalu banyak percobaan login gagal. Silakan coba lagi dalam {$remainingMinutes} menit.",
@@ -39,10 +39,10 @@ class CheckLoginAttempts
                 Cookie::queue(Cookie::forget($attemptsKey));
             }
         }
-        
+
         return $next($request);
     }
-    
+
     /**
      * Get unique identifier for rate limiting
      */

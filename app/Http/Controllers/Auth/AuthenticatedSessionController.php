@@ -21,24 +21,24 @@ class AuthenticatedSessionController extends Controller
         $identifier = $this->getIdentifier($request);
         $lockoutKey = 'login_lockout_' . $identifier;
         $attemptsKey = 'login_attempts_' . $identifier;
-        
+
         $isLocked = false;
         $remainingMinutes = 0;
         $attempts = 0;
-        
+
         if ($request->cookie($lockoutKey)) {
             $lockoutTime = (int) $request->cookie($lockoutKey);
-            
+
             if (time() < $lockoutTime) {
                 $isLocked = true;
                 $remainingMinutes = ceil(($lockoutTime - time()) / 60);
             }
         }
-        
+
         if ($request->cookie($attemptsKey)) {
             $attempts = (int) $request->cookie($attemptsKey);
         }
-        
+
         return view('auth.login', [
             'isLocked' => $isLocked,
             'remainingMinutes' => $remainingMinutes,
@@ -85,7 +85,7 @@ class AuthenticatedSessionController extends Controller
 
         return redirect('/');
     }
-    
+
     /**
      * Get unique identifier for rate limiting
      */
