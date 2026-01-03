@@ -53,10 +53,24 @@ class LoginRequest extends FormRequest
         $this->ensureIsNotRateLimited();
 
         if (! Auth::attempt($this->only('email', 'password'), $this->boolean('remember'))) {
+            // Get current attempts before incrementing
+            $identifier = $this->getIdentifier();
+            $attemptsKey = 'login_attempts_' . $identifier;
+            $currentAttempts = (int) $this->cookie($attemptsKey, 0);
+            $newAttempts = $currentAttempts + 1;
+            $remainingAttempts = self::MAX_ATTEMPTS - $newAttempts;
+            
             $this->incrementLoginAttempts();
 
+            // Build error message with remaining attempts
+            if ($remainingAttempts > 0) {
+                $errorMessage = 'Kredensial ini tidak sesuai dengan catatan kami. Anda memiliki ' . $remainingAttempts . ' percobaan lagi sebelum akun dikunci selama ' . self::LOCKOUT_MINUTES . ' menit.';
+            } else {
+                $errorMessage = 'Terlalu banyak percobaan login gagal. Akun Anda telah dikunci selama ' . self::LOCKOUT_MINUTES . ' menit.';
+            }
+
             throw ValidationException::withMessages([
-                'email' => trans('auth.failed'),
+                'email' => $errorMessage,
             ]);
         }
 
